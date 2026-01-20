@@ -1,3 +1,8 @@
+/* ========================================
+   POUR HAUS CONCRETE - AWWWARDS EDITION
+   Premium Typography + Animation System
+   ======================================== */
+
 /* Premium Typography Stack */
 /* Clash Display - Distinctive brutalist display font */
 @import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap");
@@ -9,6 +14,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ========================================
+   CUSTOM CSS PROPERTIES - DESIGN TOKENS
+   ======================================== */
+:root {
+  /* Custom easing curves - signature motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Animation durations */
+  --duration-fast: 0.2s;
+  --duration-normal: 0.4s;
+  --duration-slow: 0.8s;
+  --duration-slower: 1.2s;
+
+  /* Colors with alpha variants */
+  --color-clay: #964b00;
+  --color-clay-glow: rgba(150, 75, 0, 0.3);
+  --color-black: #0a0a0a;
+  --color-white: #fafafa;
+}
 
 /* ========================================
    BASE STYLES
@@ -24,6 +52,22 @@
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   html.lenis,
@@ -53,7 +97,32 @@
   }
 
   ::selection {
-    @apply bg-white text-black;
+    background: var(--color-clay);
+    color: var(--color-white);
+  }
+
+  /* Accessibility: Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Focus visible for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 4px;
+  }
+
+  /* Remove focus outline for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
   }
 }
 
@@ -88,6 +157,54 @@
 
 .cursor.hover-large .cursor-outline {
   @apply w-32 h-32;
+}
+
+/* Cursor text label for contextual hints */
+.cursor-text {
+  @apply absolute font-mono text-xs uppercase tracking-wider;
+  color: var(--color-white);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.cursor.hover-text .cursor-text {
+  opacity: 1;
+}
+
+.cursor.hover-text .cursor-outline {
+  @apply w-24 h-24;
+  background: rgba(150, 75, 0, 0.15);
+  backdrop-filter: blur(4px);
+  border-color: var(--color-clay);
+}
+
+/* Stuck mode for magnetic elements */
+.cursor.stuck .cursor-outline {
+  @apply border-2;
+  border-color: var(--color-clay);
+  transition: none;
+}
+
+/* Drag cursor mode */
+.cursor.hover-drag .cursor-outline {
+  @apply w-20 h-20;
+  border-style: dashed;
+  animation: rotate-dash 8s linear infinite;
+}
+
+@keyframes rotate-dash {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 /* Hide custom cursor on touch devices */
@@ -646,4 +763,501 @@
   .backface-hidden {
     backface-visibility: hidden;
   }
+
+  /* Vertical writing mode for architectural accent */
+  .writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
+
+/* ========================================
+   PREMIUM LOADING EXPERIENCE
+   PSI Gauge with staged reveal
+   ======================================== */
+.loader-content {
+  @apply flex flex-col items-center justify-center text-center;
+}
+
+.loader-gauge {
+  @apply relative flex flex-col items-center;
+}
+
+.loader-psi {
+  font-family: "Clash Display", sans-serif;
+  font-size: clamp(6rem, 20vw, 14rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-white);
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+/* When reaching full pressure, fill the number */
+.loader-psi.filled {
+  color: var(--color-white);
+  -webkit-text-stroke: 1px transparent;
+}
+
+.loader-unit {
+  @apply font-mono text-xs uppercase tracking-ultra text-gray-light mt-2;
+}
+
+.loader-stage {
+  @apply font-mono text-sm uppercase tracking-ultra text-clay mt-8;
+  transition: opacity 0.3s ease;
+}
+
+.loader-progress {
+  @apply w-48 h-px bg-gray-dark mt-6 overflow-hidden;
+}
+
+.loader-progress-bar {
+  @apply h-full bg-white;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.loader-tagline {
+  @apply font-body text-body text-gray-light mt-8;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.6s var(--ease-out-expo);
+}
+
+.loader-tagline.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
+   HERO HEADLINE - TYPOGRAPHY AS ART
+   Massive, bleeding edges, outline text
+   ======================================== */
+.hero-headline {
+  font-family: "Clash Display", sans-serif;
+  font-size: clamp(4rem, 18vw, 16rem);
+  font-weight: 700;
+  line-height: 0.95; /* Increased from 0.85 to prevent clipping */
+  letter-spacing: -0.04em;
+  padding-bottom: 0.05em; /* Extra space for descenders */
+  text-transform: uppercase;
+  /* Bleed off the left edge */
+  margin-left: -0.05em;
+}
+
+.hero-headline-line {
+  display: block;
+}
+
+/* Outline/stroke text for second line - premium Awwwards effect */
+.hero-headline-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-white); /* Increased from 1px for better legibility */
+  text-stroke: 2px var(--color-white); /* Standard property fallback */
+  transition: all 0.6s var(--ease-out-expo);
+  /* Prevent outline text from being obscured */
+  position: relative;
+  z-index: 1;
+}
+
+/* On hover, fill the outline text */
+.hero-headline:hover .hero-headline-outline {
+  color: var(--color-white);
+  -webkit-text-stroke: 1px transparent;
+}
+
+.hero-overline {
+  overflow: hidden;
+}
+
+.hero-subheadline {
+  max-width: 36rem;
+}
+
+.hero-cta-row {
+  @apply relative;
+}
+
+/* Hero side architectural accent */
+.hero-side-detail {
+  @apply absolute right-8 top-1/2 transform -translate-y-1/2;
+}
+
+/* Hero background texture */
+.hero-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ========================================
+   NAVIGATION LINK HOVER EFFECTS
+   Subtle underline reveal
+   ======================================== */
+.nav-link {
+  @apply relative inline-block overflow-hidden;
+}
+
+.nav-link-text {
+  @apply relative inline-block;
+}
+
+/* Animated underline on hover */
+.nav-link::after {
+  content: "";
+  @apply absolute bottom-0 left-0 w-full h-px bg-white;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ========================================
+   BUTTON VARIANTS
+   Ghost button + arrow animation
+   ======================================== */
+.btn-ghost {
+  @apply inline-flex items-center gap-3;
+  position: relative;
+}
+
+.btn-ghost::after {
+  content: "";
+  @apply w-0 h-px bg-current;
+  transition: width 0.4s var(--ease-out-expo);
+}
+
+.btn-ghost:hover::after {
+  width: 2rem;
+}
+
+.btn-text {
+  @apply inline-block;
+}
+
+.btn-arrow {
+  @apply inline-block transition-transform duration-300;
+  transition-timing-function: var(--ease-out-expo);
+}
+
+.btn-primary:hover .btn-arrow,
+.group:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* ========================================
+   SCROLL INDICATOR - POUR ANIMATION
+   Concrete pouring drop effect
+   ======================================== */
+.scroll-indicator-pour {
+  @apply relative w-8 h-20;
+}
+
+.scroll-pour-drop {
+  @apply absolute top-0 left-1/2 w-1 bg-clay;
+  transform: translateX(-50%);
+  height: 0;
+  animation: pour-drop 2.5s ease-in-out infinite;
+}
+
+@keyframes pour-drop {
+  0% {
+    height: 0;
+    top: 0;
+    opacity: 1;
+  }
+  40% {
+    height: 60%;
+    top: 0;
+    opacity: 1;
+  }
+  60% {
+    height: 60%;
+    top: 40%;
+    opacity: 1;
+  }
+  100% {
+    height: 0;
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Splash effect at bottom */
+.scroll-pour-drop::after {
+  content: "";
+  @apply absolute bottom-0 left-1/2 w-2 h-2 rounded-full bg-clay;
+  transform: translateX(-50%) scale(0);
+  animation: pour-splash 2.5s ease-in-out infinite;
+}
+
+@keyframes pour-splash {
+  0%,
+  50% {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-50%) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   FOOTER CTA SECTION
+   Dramatic headline + inverted section
+   ======================================== */
+.footer-headline {
+  font-family: "Clash Display", sans-serif;
+  font-size: clamp(3rem, 12vw, 10rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.footer-cta-link {
+  @apply inline-flex items-center gap-4;
+  transition: all 0.4s var(--ease-out-expo);
+}
+
+.footer-cta-link:hover {
+  gap: 1.5rem;
+}
+
+/* ========================================
+   IMAGE GLOW EFFECT
+   Premium depth perception
+   ======================================== */
+.image-glow {
+  @apply relative;
+}
+
+.image-glow::before {
+  content: "";
+  @apply absolute -inset-8 blur-3xl opacity-0;
+  background: var(--color-clay-glow);
+  transition: opacity 0.6s var(--ease-out-expo);
+  z-index: -1;
+}
+
+.image-glow:hover::before {
+  opacity: 1;
+}
+
+/* ========================================
+   STAT NUMBER ANIMATION
+   Count-up effect support
+   ======================================== */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ========================================
+   MOBILE MENU
+   Full-screen overlay with smooth transitions
+   ======================================== */
+.mobile-menu {
+  @apply fixed inset-0 bg-black z-[9990];
+  transform: translateX(100%);
+  transition: transform 0.5s var(--ease-out-expo);
+  visibility: hidden;
+}
+
+.mobile-menu.open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.mobile-menu-content {
+  @apply h-full flex flex-col justify-center items-center px-8;
+  position: relative;
+}
+
+.mobile-menu-close {
+  @apply absolute top-6 right-6 w-12 h-12;
+  @apply flex items-center justify-center;
+  @apply text-3xl text-white hover:text-clay;
+  @apply transition-colors duration-300;
+  @apply focus:outline-none focus:ring-2 focus:ring-clay rounded;
+}
+
+.mobile-nav-list {
+  @apply flex flex-col items-center gap-8 list-none;
+}
+
+.mobile-nav-link {
+  font-family: "Clash Display", sans-serif;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 600;
+  @apply text-white hover:text-clay transition-colors duration-300;
+  @apply focus:outline-none focus:text-clay;
+}
+
+.mobile-menu-footer {
+  @apply absolute bottom-8 left-0 right-0 text-center;
+}
+
+/* ========================================
+   PERFORMANCE: Optimized Grain Overlay
+   Uses CSS containment for better performance
+   ======================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .grain-overlay {
+    contain: strict;
+    will-change: transform;
+  }
+}
+
+/* Disable grain on low-powered devices */
+@media (max-width: 768px) {
+  .grain-overlay {
+    animation: none;
+    opacity: 0.015;
+  }
+}
+
+/* ========================================
+   VISUAL DEPTH - PREMIUM EFFECTS
+   Layered shadows, glows, and elevation
+   ======================================== */
+
+/* Premium Card Hover - Lift + Glow */
+.h-scroll-card {
+  position: relative;
+  transition:
+    transform 0.6s var(--ease-out-expo),
+    box-shadow 0.6s var(--ease-out-expo);
+}
+
+.h-scroll-card::before {
+  content: "";
+  @apply absolute -inset-4 rounded-lg opacity-0;
+  background: radial-gradient(
+    ellipse at center,
+    var(--color-clay-glow),
+    transparent 70%
+  );
+  transition: opacity 0.6s var(--ease-out-expo);
+  z-index: -1;
+}
+
+.h-scroll-card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(150, 75, 0, 0.1);
+}
+
+.h-scroll-card:hover::before {
+  opacity: 1;
+}
+
+/* Section separator gradient line */
+.section-divider {
+  @apply w-full h-px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-clay) 20%,
+    var(--color-clay) 80%,
+    transparent
+  );
+  opacity: 0.3;
+}
+
+/* Text gradient effect for highlights */
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-white) 0%,
+    var(--color-clay) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Depth shadow for floating elements */
+.shadow-depth {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 16px 32px rgba(0, 0, 0, 0.15),
+    0 32px 64px rgba(0, 0, 0, 0.2);
+}
+
+/* Glow pulse animation for accents */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px var(--color-clay-glow);
+  }
+  50% {
+    box-shadow:
+      0 0 40px var(--color-clay-glow),
+      0 0 60px var(--color-clay-glow);
+  }
+}
+
+.glow-accent {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Process step hover elevation */
+.process-step {
+  @apply relative transition-transform;
+  transition-duration: 0.4s;
+  transition-timing-function: var(--ease-out-expo);
+}
+
+.process-step::after {
+  content: "";
+  @apply absolute inset-0 rounded-lg opacity-0;
+  background: linear-gradient(180deg, transparent, var(--color-clay-glow));
+  transition: opacity 0.4s var(--ease-out-expo);
+  z-index: -1;
+}
+
+.process-step:hover {
+  transform: translateY(-4px);
+}
+
+.process-step:hover::after {
+  opacity: 0.5;
+}
+
+/* Button glow on hover */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: "";
+  @apply absolute inset-0 opacity-0;
+  background: radial-gradient(
+    circle at center,
+    var(--color-clay-glow),
+    transparent 70%
+  );
+  transition: opacity 0.4s ease;
+}
+
+.btn-primary:hover::after {
+  opacity: 0.3;
+}
+
+/* Accordion item subtle glow on expand */
+.accordion-item.active {
+  background: linear-gradient(180deg, transparent, rgba(150, 75, 0, 0.03));
 }

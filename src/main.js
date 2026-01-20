@@ -10,6 +10,8 @@ import { initCursor } from "./scripts/cursor.js";
 import { initAccordion } from "./scripts/accordion.js";
 import { initHorizontalScroll } from "./scripts/horizontal-scroll.js";
 import { initMagnetic } from "./scripts/magnetic.js";
+import { initMobileMenu } from "./scripts/mobile-menu.js";
+import { initHeroShader } from "./scripts/hero-shader.js";
 
 // Wait for DOM
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,33 +20,96 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * Loading sequence
+ * Premium Loading Sequence - PSI Gauge
+ * Simulates concrete pressure building to 4000 PSI
  */
 function initLoader() {
   const loader = document.getElementById("loader");
+  const psiDisplay = document.getElementById("loader-psi");
+  const stageDisplay = document.getElementById("loader-stage");
+  const progressBar = document.getElementById("loader-progress-bar");
+  const tagline = document.getElementById("loader-tagline");
 
-  // Simulate minimum load time for smooth transition
-  const minLoadTime = 1500;
-  const startTime = Date.now();
+  // Loading stages with their PSI thresholds
+  const stages = [
+    { psi: 0, label: "MIXING", duration: 800 },
+    { psi: 1000, label: "POURING", duration: 600 },
+    { psi: 2500, label: "CURING", duration: 700 },
+    { psi: 4000, label: "READY", duration: 400 },
+  ];
 
-  // Wait for images to load (or timeout)
-  Promise.all([
-    document.fonts.ready,
-    loadCriticalImages(),
-    new Promise((resolve) => setTimeout(resolve, minLoadTime)),
-  ]).then(() => {
-    // Ensure minimum time has passed
-    const elapsed = Date.now() - startTime;
-    const remaining = Math.max(0, minLoadTime - elapsed);
+  const targetPSI = 4000;
+  const totalDuration = 2500; // Total animation time in ms
+  let currentPSI = 0;
+  let startTime = null;
 
-    setTimeout(() => {
-      // Hide loader
-      loader.classList.add("hidden");
+  // Custom easing function - starts slow, accelerates, then slows at end
+  const easeOutExpo = (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
-      // Initialize all modules
-      initAllModules();
-    }, remaining);
+  // Animation loop for PSI counter
+  function animatePSI(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+    const progress = Math.min(elapsed / totalDuration, 1);
+    const easedProgress = easeOutExpo(progress);
+
+    // Calculate current PSI
+    currentPSI = Math.floor(easedProgress * targetPSI);
+
+    // Update display
+    if (psiDisplay) {
+      psiDisplay.textContent = currentPSI;
+      // Update ARIA for accessibility
+      loader.setAttribute("aria-valuenow", Math.floor(progress * 100));
+    }
+
+    // Update progress bar
+    if (progressBar) {
+      progressBar.style.width = `${progress * 100}%`;
+    }
+
+    // Update stage based on PSI
+    if (stageDisplay) {
+      for (let i = stages.length - 1; i >= 0; i--) {
+        if (currentPSI >= stages[i].psi) {
+          stageDisplay.textContent = stages[i].label;
+          break;
+        }
+      }
+    }
+
+    // Show tagline near end
+    if (progress > 0.7 && tagline) {
+      tagline.classList.add("visible");
+    }
+
+    // Fill the number when reaching max
+    if (progress > 0.9 && psiDisplay) {
+      psiDisplay.classList.add("filled");
+    }
+
+    // Continue or complete
+    if (progress < 1) {
+      requestAnimationFrame(animatePSI);
+    } else {
+      // Animation complete - wait for resources then hide loader
+      completeLoading();
+    }
+  }
+
+  // Wait for critical resources then start animation
+  Promise.all([document.fonts.ready, loadCriticalImages()]).then(() => {
+    requestAnimationFrame(animatePSI);
   });
+
+  // Complete loading and reveal site
+  function completeLoading() {
+    // Short pause at 4000 PSI before reveal
+    setTimeout(() => {
+      loader.classList.add("hidden");
+      initAllModules();
+    }, 400);
+  }
 }
 
 /**
@@ -99,6 +164,10 @@ function initAllModules() {
   initMagnetic();
   initAccordion();
   initHorizontalScroll(lenis);
+  initMobileMenu();
+
+  // Premium visual effects
+  initHeroShader(lenis);
 
   // Trigger initial reveals for above-fold content
   setTimeout(() => {

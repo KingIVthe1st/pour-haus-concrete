@@ -1,17 +1,36 @@
 /**
  * Premium Animations Module
  * Awwwards-grade GSAP animations with scroll-velocity effects
+ *
+ * Architecture:
+ * - Custom easing curves registered with GSAP
+ * - ScrollTrigger properly synced with Lenis
+ * - Reduced motion preference respected
+ * - Performance-optimized RAF usage
  */
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CustomEase } from "gsap/CustomEase";
 import SplitType from "split-type";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
-// Global state for scroll velocity
+// ========================================
+// CUSTOM EASING CURVES - Signature Motion
+// ========================================
+// These create the premium "feel" that separates award-winning sites
+CustomEase.create("expo-out", "0.16, 1, 0.3, 1");
+CustomEase.create("expo-in-out", "0.87, 0, 0.13, 1");
+CustomEase.create("quint-out", "0.22, 1, 0.36, 1");
+CustomEase.create("elastic-subtle", "0.68, -0.55, 0.265, 1.55");
+// Premium "pour" easing - slow start, accelerate, soft landing (like liquid concrete)
+CustomEase.create("pour", "0.4, 0, 0.2, 1");
+
+// Global state
 let scrollVelocity = 0;
 let currentLenis = null;
+let prefersReducedMotion = false;
 
 /**
  * Initialize all scroll-based animations
@@ -20,155 +39,275 @@ let currentLenis = null;
 export function initAnimations(lenis) {
   currentLenis = lenis;
 
-  // Track scroll velocity for effects
+  // Check reduced motion preference
+  prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  // Listen for preference changes
+  window
+    .matchMedia("(prefers-reduced-motion: reduce)")
+    .addEventListener("change", (e) => {
+      prefersReducedMotion = e.matches;
+    });
+
+  // ========================================
+  // CRITICAL: Sync Lenis with ScrollTrigger
+  // Without this, scroll position can get out of sync
+  // ========================================
+  ScrollTrigger.scrollerProxy(document.body, {
+    scrollTop(value) {
+      if (arguments.length) {
+        lenis.scrollTo(value, { immediate: true });
+      }
+      return lenis.scroll;
+    },
+    getBoundingClientRect() {
+      return {
+        top: 0,
+        left: 0,
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+    },
+    pinType: document.body.style.transform ? "transform" : "fixed",
+  });
+
+  // Update ScrollTrigger on Lenis scroll
   lenis.on("scroll", ({ velocity }) => {
     scrollVelocity = velocity;
+    ScrollTrigger.update();
   });
+
+  // Ensure ScrollTrigger refreshes on resize
+  ScrollTrigger.addEventListener("refresh", () => lenis.resize());
 
   // Wait for fonts to load before splitting text
   document.fonts.ready.then(() => {
-    initHeroOrchestration();
-    initRevealAnimations();
-    initParallaxAnimations();
-    initVelocityBlur();
-    initFooterInvert();
-    initScrollProgress();
+    // Skip complex animations if reduced motion preferred
+    if (prefersReducedMotion) {
+      initReducedMotionAnimations();
+    } else {
+      initHeroOrchestration();
+      initRevealAnimations();
+      initParallaxAnimations();
+      initVelocityBlur();
+      initFooterInvert();
+      initScrollProgress();
+    }
   });
+}
+
+/**
+ * Simplified animations for reduced motion users
+ * Respects accessibility while still providing feedback
+ */
+function initReducedMotionAnimations() {
+  // Simple fade for all reveals
+  document.querySelectorAll("[data-reveal]").forEach((el) => {
+    gsap.set(el, { opacity: 0 });
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 90%",
+      onEnter: () => gsap.to(el, { opacity: 1, duration: 0.3 }),
+    });
+  });
+
+  // Show hero immediately
+  const heroHeadline = document.querySelector(".hero-headline");
+  if (heroHeadline) {
+    gsap.to(heroHeadline, { opacity: 1, duration: 0.3 });
+  }
 }
 
 /**
  * Premium Hero Orchestration
  * Multi-layered reveal with depth cues
+ * Handles: LIQUID (filled) / HISTORY (outline) headline structure
  */
 function initHeroOrchestration() {
-  const heroText = document.querySelector("[data-split-text]");
-  const heroSubtext = document.querySelector("#hero .text-mono-detail");
+  const heroHeadline = document.querySelector(".hero-headline");
+  const heroLines = document.querySelectorAll(".hero-headline-line");
+  const heroOverline = document.querySelector(".hero-overline");
+  const heroSubheadline = document.querySelector(".hero-subheadline");
+  const heroCTA = document.querySelector(".hero-cta-row");
   const scrollIndicator = document.querySelector(".scroll-indicator");
+  const sideDetail = document.querySelector(".hero-side-detail");
 
-  if (!heroText) return;
+  if (!heroHeadline) return;
 
-  // Split text into characters with wrapper for 3D
-  const split = new SplitType(heroText, {
-    types: "chars",
-    tagName: "span",
+  // Split each line into characters for premium stagger effect
+  const splits = [];
+  heroLines.forEach((line) => {
+    const split = new SplitType(line, {
+      types: "chars",
+      tagName: "span",
+    });
+    splits.push(split);
   });
 
-  // Add perspective container for 3D depth
-  heroText.style.perspective = "1000px";
-  heroText.style.perspectiveOrigin = "50% 50%";
+  // Add perspective for 3D depth
+  heroHeadline.style.perspective = "1200px";
+  heroHeadline.style.perspectiveOrigin = "50% 100%";
 
-  // Set initial state - further back in Z-space
-  gsap.set(split.chars, {
-    y: 120,
-    opacity: 0,
-    rotateX: -90,
-    z: -200,
-    transformOrigin: "center bottom",
+  // Set initial states - characters emerge from below with rotation
+  splits.forEach((split, lineIndex) => {
+    gsap.set(split.chars, {
+      y: 150,
+      opacity: 0,
+      rotateX: -45,
+      z: -100,
+      transformOrigin: "center bottom",
+    });
   });
 
-  // Create master timeline for orchestrated reveal
+  // Create master timeline with "pour" easing
   const heroTimeline = gsap.timeline({
-    delay: 0.3,
-    defaults: { ease: "expo.out" },
+    delay: 0.2,
+    defaults: { ease: "pour" },
   });
 
-  // Phase 1: Characters emerge from depth
-  heroTimeline.to(split.chars, {
-    y: 0,
-    opacity: 1,
-    rotateX: 0,
-    z: 0,
-    duration: 1.4,
-    stagger: {
-      amount: 0.6,
-      from: "start",
-    },
-  });
-
-  // Phase 2: Subtle overshoot and settle
-  heroTimeline.to(
-    split.chars,
-    {
-      y: -8,
-      duration: 0.3,
-      stagger: {
-        amount: 0.2,
-        from: "start",
-      },
-    },
-    "-=0.4",
-  );
-
-  heroTimeline.to(
-    split.chars,
-    {
-      y: 0,
-      duration: 0.4,
-      ease: "elastic.out(1, 0.5)",
-      stagger: {
-        amount: 0.2,
-        from: "start",
-      },
-    },
-    "-=0.1",
-  );
-
-  // Phase 3: Subtext fades in
-  if (heroSubtext) {
+  // Phase 1: Overline slides in
+  if (heroOverline) {
     heroTimeline.fromTo(
-      heroSubtext,
+      heroOverline,
+      { x: -30, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.8, ease: "expo-out" },
+    );
+  }
+
+  // Phase 2: First line (LIQUID) - filled text emerges
+  if (splits[0]) {
+    heroTimeline.to(
+      splits[0].chars,
       {
-        y: 40,
+        y: 0,
+        opacity: 1,
+        rotateX: 0,
+        z: 0,
+        duration: 1.2,
+        stagger: {
+          amount: 0.4,
+          from: "start",
+        },
+        ease: "expo-out",
+      },
+      "-=0.4",
+    );
+  }
+
+  // Phase 3: Second line (HISTORY) - outline text with slight delay
+  if (splits[1]) {
+    heroTimeline.to(
+      splits[1].chars,
+      {
+        y: 0,
+        opacity: 1,
+        rotateX: 0,
+        z: 0,
+        duration: 1.4,
+        stagger: {
+          amount: 0.5,
+          from: "start",
+        },
+        ease: "expo-out",
+      },
+      "-=0.8",
+    );
+  }
+
+  // Phase 4: Subheadline with blur reveal
+  if (heroSubheadline) {
+    heroTimeline.fromTo(
+      heroSubheadline,
+      {
+        y: 60,
         opacity: 0,
-        filter: "blur(10px)",
+        filter: "blur(12px)",
       },
       {
         y: 0,
         opacity: 1,
         filter: "blur(0px)",
         duration: 1,
-        ease: "power3.out",
+        ease: "quint-out",
       },
-      "-=0.8",
+      "-=0.6",
     );
   }
 
-  // Phase 4: Scroll indicator appears
+  // Phase 5: CTA buttons slide up
+  if (heroCTA) {
+    heroTimeline.fromTo(
+      heroCTA,
+      {
+        y: 40,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "expo-out",
+      },
+      "-=0.5",
+    );
+  }
+
+  // Phase 6: Scroll indicator + side detail fade in
   if (scrollIndicator) {
     heroTimeline.fromTo(
       scrollIndicator,
-      {
-        opacity: 0,
-        y: 20,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-      },
-      "-=0.4",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+      "-=0.3",
     );
   }
 
-  // Add subtle hover parallax to hero chars
-  split.chars.forEach((char, i) => {
-    char.addEventListener("mouseenter", () => {
-      gsap.to(char, {
-        y: -5,
-        scale: 1.1,
-        duration: 0.3,
-        ease: "power2.out",
+  if (sideDetail) {
+    heroTimeline.fromTo(
+      sideDetail,
+      { opacity: 0, x: 20 },
+      { opacity: 1, x: 0, duration: 0.8, ease: "expo-out" },
+      "-=0.5",
+    );
+  }
+
+  // Interactive: Characters react to hover
+  splits.forEach((split) => {
+    split.chars.forEach((char) => {
+      char.addEventListener("mouseenter", () => {
+        gsap.to(char, {
+          y: -8,
+          scale: 1.15,
+          duration: 0.25,
+          ease: "power2.out",
+        });
+      });
+      char.addEventListener("mouseleave", () => {
+        gsap.to(char, {
+          y: 0,
+          scale: 1,
+          duration: 0.4,
+          ease: "elastic-subtle",
+        });
       });
     });
-    char.addEventListener("mouseleave", () => {
-      gsap.to(char, {
-        y: 0,
-        scale: 1,
-        duration: 0.5,
-        ease: "elastic.out(1, 0.5)",
+  });
+
+  // Parallax effect on scroll - headline moves slower than scroll
+  ScrollTrigger.create({
+    trigger: "#hero",
+    start: "top top",
+    end: "bottom top",
+    scrub: true,
+    onUpdate: (self) => {
+      const progress = self.progress;
+      gsap.set(heroHeadline, {
+        y: progress * 100,
+        opacity: 1 - progress * 0.5,
       });
-    });
+    },
   });
 }
 
