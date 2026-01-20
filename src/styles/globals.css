@@ -1,0 +1,515 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+
+  body {
+    @apply bg-black text-white font-body;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    @apply bg-white text-black;
+  }
+}
+
+/* ========================================
+   CUSTOM CURSOR
+   ======================================== */
+.cursor {
+  @apply fixed pointer-events-none z-[9999] mix-blend-difference;
+  top: 0;
+  left: 0;
+}
+
+.cursor-dot {
+  @apply w-2 h-2 bg-white rounded-full;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-outline {
+  @apply w-10 h-10 border border-white rounded-full absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.3s ease,
+    height 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.cursor.hover .cursor-outline {
+  @apply w-20 h-20;
+}
+
+.cursor.hover-large .cursor-outline {
+  @apply w-32 h-32;
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .cursor {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   FILM GRAIN OVERLAY
+   ======================================== */
+.grain-overlay {
+  @apply fixed inset-0 pointer-events-none z-[9998];
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  animation: grain 0.5s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  20% {
+    transform: translate(-15%, 5%);
+  }
+  30% {
+    transform: translate(7%, -25%);
+  }
+  40% {
+    transform: translate(-5%, 25%);
+  }
+  50% {
+    transform: translate(-15%, 10%);
+  }
+  60% {
+    transform: translate(15%, 0%);
+  }
+  70% {
+    transform: translate(0%, 15%);
+  }
+  80% {
+    transform: translate(3%, 35%);
+  }
+  90% {
+    transform: translate(-10%, 10%);
+  }
+}
+
+/* ========================================
+   TYPOGRAPHY UTILITIES
+   ======================================== */
+@layer components {
+  .text-split-wrapper {
+    @apply overflow-hidden;
+  }
+
+  .text-split-line {
+    @apply block;
+  }
+
+  .heading-hero {
+    @apply font-display font-extrabold text-hero leading-tight tracking-tighter;
+  }
+
+  .heading-section {
+    @apply font-display font-bold text-h1 leading-snug tracking-tight;
+  }
+
+  .heading-sub {
+    @apply font-display font-semibold text-h2 leading-snug;
+  }
+
+  .label-text {
+    @apply font-mono uppercase tracking-ultra text-gray-light;
+    font-size: 0.75rem;
+  }
+
+  .text-body-large {
+    @apply font-body text-body leading-relaxed;
+  }
+
+  .text-mono-detail {
+    @apply font-mono text-small tracking-wide;
+  }
+}
+
+/* ========================================
+   BUTTON STYLES
+   ======================================== */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center;
+    @apply px-8 py-4 border border-white bg-transparent;
+    @apply font-mono uppercase tracking-ultra;
+    font-size: 0.75rem;
+    @apply transition-all duration-500 ease-expo-out;
+    @apply hover:bg-white hover:text-black;
+  }
+
+  .btn-magnetic {
+    @apply relative;
+    will-change: transform;
+  }
+}
+
+/* ========================================
+   SECTION LAYOUTS
+   ======================================== */
+@layer components {
+  .section {
+    @apply relative w-full;
+    padding-left: clamp(2rem, 8vw, 10rem);
+    padding-right: clamp(2rem, 8vw, 10rem);
+    padding-top: clamp(6rem, 15vh, 12rem);
+    padding-bottom: clamp(6rem, 15vh, 12rem);
+  }
+
+  .section-full {
+    @apply min-h-screen flex flex-col justify-center;
+  }
+}
+
+/* ========================================
+   HORIZONTAL SCROLL
+   ======================================== */
+.h-scroll-section {
+  @apply relative;
+}
+
+.h-scroll-track {
+  @apply flex gap-8;
+  will-change: transform;
+}
+
+.h-scroll-card {
+  @apply flex-shrink-0 w-[60vw] aspect-[4/3] relative overflow-hidden;
+}
+
+@media (max-width: 768px) {
+  .h-scroll-card {
+    @apply w-[85vw];
+  }
+}
+
+.h-scroll-card img {
+  @apply w-full h-full object-cover;
+  filter: grayscale(100%);
+  transition:
+    filter 0.6s ease,
+    transform 0.6s ease;
+}
+
+.h-scroll-card:hover img {
+  filter: grayscale(0%);
+  transform: scale(1.02);
+}
+
+/* ========================================
+   ACCORDION
+   ======================================== */
+.accordion-item {
+  @apply border-b border-gray-dark;
+}
+
+.accordion-header {
+  @apply flex items-center justify-between py-8 cursor-pointer;
+  @apply transition-colors duration-300;
+}
+
+.accordion-header:hover {
+  @apply text-gray-light;
+}
+
+.accordion-number {
+  @apply font-mono text-gray-light mr-8;
+}
+
+.accordion-title {
+  @apply font-display font-medium text-h3 flex-grow;
+}
+
+.accordion-icon {
+  @apply w-6 h-6 relative;
+  transition: transform 0.4s ease;
+}
+
+.accordion-icon::before,
+.accordion-icon::after {
+  content: "";
+  @apply absolute bg-white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.accordion-icon::before {
+  @apply w-full h-px;
+}
+
+.accordion-icon::after {
+  @apply w-px h-full;
+  transition: transform 0.4s ease;
+}
+
+.accordion-item.active .accordion-icon {
+  transform: rotate(45deg);
+}
+
+.accordion-content {
+  @apply overflow-hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease;
+}
+
+.accordion-item.active .accordion-content {
+  max-height: 300px;
+}
+
+.accordion-body {
+  @apply pb-8 text-gray-light text-body leading-relaxed max-w-xl;
+}
+
+/* ========================================
+   SERVICE IMAGE HOVER
+   ======================================== */
+.service-image {
+  @apply fixed top-1/2 right-[10%] w-[30vw] aspect-[4/3] pointer-events-none z-50;
+  transform: translateY(-50%);
+  opacity: 0;
+  clip-path: inset(0% 100% 0% 0%);
+  transition: opacity 0.4s ease;
+}
+
+.service-image.visible {
+  opacity: 1;
+  clip-path: inset(0% 0% 0% 0%);
+  transition:
+    clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s ease;
+}
+
+.service-image img {
+  @apply w-full h-full object-cover;
+}
+
+/* ========================================
+   SCROLL INDICATOR
+   ======================================== */
+.scroll-indicator {
+  @apply absolute bottom-12 left-1/2 transform -translate-x-1/2;
+  @apply flex flex-col items-center gap-4;
+}
+
+.scroll-indicator-line {
+  @apply w-px h-16 bg-white origin-top;
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scroll-pulse {
+  0%,
+  100% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.scroll-indicator-text {
+  @apply font-mono text-xs uppercase tracking-ultra text-gray-light;
+}
+
+/* ========================================
+   PROCESS STEPS
+   ======================================== */
+.process-step {
+  @apply flex flex-col;
+}
+
+.process-number {
+  @apply font-mono text-[8rem] leading-none text-gray-dark;
+  transition: color 0.4s ease;
+}
+
+.process-step:hover .process-number,
+.process-step.active .process-number {
+  @apply text-white;
+}
+
+.process-title {
+  @apply font-display font-bold text-h2 mt-4;
+}
+
+.process-desc {
+  @apply text-gray-light text-body mt-4 max-w-xs;
+}
+
+/* ========================================
+   LOADING SCREEN
+   ======================================== */
+.loading-screen {
+  @apply fixed inset-0 bg-black z-[99999] flex items-center justify-center;
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-logo {
+  @apply w-48 opacity-0;
+  animation: fade-in 0.8s ease forwards 0.2s;
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   REVEAL ANIMATIONS
+   ======================================== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-reveal-delay="1"] {
+  transition-delay: 0.1s;
+}
+[data-reveal-delay="2"] {
+  transition-delay: 0.2s;
+}
+[data-reveal-delay="3"] {
+  transition-delay: 0.3s;
+}
+[data-reveal-delay="4"] {
+  transition-delay: 0.4s;
+}
+[data-reveal-delay="5"] {
+  transition-delay: 0.5s;
+}
+
+/* ========================================
+   SPLIT TEXT ANIMATION
+   ======================================== */
+.char {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.char.animate {
+  transform: translateY(0);
+  opacity: 1;
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s ease;
+}
+
+.word {
+  display: inline-block;
+  overflow: hidden;
+}
+
+/* ========================================
+   RESPONSIVE ADJUSTMENTS
+   ======================================== */
+@media (max-width: 768px) {
+  .section {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .heading-hero {
+    font-size: clamp(3.5rem, 12vw, 6rem);
+  }
+
+  .heading-section {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+  }
+
+  .process-number {
+    font-size: 4rem;
+  }
+
+  .service-image {
+    display: none;
+  }
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+@layer utilities {
+  .clip-inset-full {
+    clip-path: inset(0% 100% 0% 0%);
+  }
+
+  .clip-inset-none {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}

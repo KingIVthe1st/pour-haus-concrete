@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pour Haus Concrete - Second generation precision concrete craftsmanship in Atlanta, GA. Residential, commercial, decorative, and restoration services.">
+  <meta name="keywords" content="concrete, Atlanta, Georgia, residential concrete, commercial concrete, decorative concrete, concrete contractor">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pour Haus Concrete | Precision Concrete">
+  <meta property="og:description" content="Second generation. First in craft. Premium concrete services in Atlanta, GA.">
+  <meta property="og:type" content="website">
+
+  <title>Pour Haus Concrete | Precision Concrete | Atlanta, GA</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/src/assets/images/logo.png">
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="/src/styles/globals.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loader">
+    <img src="/src/assets/images/logo.png" alt="Pour Haus" class="loading-logo" style="filter: invert(1);">
+  </div>
+
+  <!-- Film Grain Overlay -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="fixed top-0 left-0 w-full z-50 mix-blend-difference">
+    <nav class="flex items-center justify-between py-6 px-8 md:px-16">
+      <a href="#" class="flex items-center" data-magnetic>
+        <img src="/src/assets/images/logo.png" alt="Pour Haus" class="h-8 md:h-10" style="filter: invert(1);">
+      </a>
+      <ul class="hidden md:flex items-center gap-12">
+        <li>
+          <a href="#works" class="font-mono text-xs uppercase tracking-ultra hover:text-gray-light transition-colors duration-300" data-magnetic>Work</a>
+        </li>
+        <li>
+          <a href="#process" class="font-mono text-xs uppercase tracking-ultra hover:text-gray-light transition-colors duration-300" data-magnetic>Process</a>
+        </li>
+        <li>
+          <a href="#contact" class="font-mono text-xs uppercase tracking-ultra hover:text-gray-light transition-colors duration-300" data-magnetic>Contact</a>
+        </li>
+      </ul>
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden text-label" id="mobile-menu-btn" aria-label="Open menu">
+        MENU
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ========================================
+         SECTION 1: HERO
+         ======================================== -->
+    <section id="hero" class="section section-full bg-black relative overflow-hidden">
+      <div class="flex flex-col justify-center min-h-screen">
+        <!-- Hero Content -->
+        <div class="mt-auto mb-auto">
+          <h1 class="heading-hero text-white" data-split-text>
+            PERMANENCE
+          </h1>
+          <p class="text-mono-detail text-gray-light mt-8" data-reveal data-reveal-delay="3">
+            Precision concrete. Atlanta, GA.
+          </p>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+          <div class="scroll-indicator-line"></div>
+          <span class="scroll-indicator-text">Scroll</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 2: MANIFESTO
+         ======================================== -->
+    <section id="manifesto" class="section bg-black relative">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center min-h-[80vh]">
+        <!-- Text Content -->
+        <div class="lg:col-span-7 order-2 lg:order-1">
+          <p class="font-mono text-xs uppercase tracking-ultra mb-6" data-reveal>About</p>
+          <h2 class="heading-section mb-8" data-reveal data-reveal-delay="1">
+            Second generation.<br>
+            <span class="text-gray-light">First in craft.</span>
+          </h2>
+          <div class="space-y-6 text-body-large text-gray-light max-w-2xl">
+            <p data-reveal data-reveal-delay="2">
+              What our fathers built with their hands, we perfect with ours. No shortcuts. No compromises. Just concrete that outlasts everything.
+            </p>
+            <p data-reveal data-reveal-delay="3">
+              Pour Haus Concrete is a second-generation family operation built on a legacy of integrity, skilled craftsmanship, and honest pricing. We combine decades of hands-on experience with innovative techniques and efficient processes.
+            </p>
+            <p data-reveal data-reveal-delay="4">
+              From single pours to large multi-phase developments, our team delivers consistent quality—on time and on budget. Customer service isn't an afterthought; it's part of our foundation.
+            </p>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="lg:col-span-5 order-1 lg:order-2">
+          <div class="relative overflow-hidden" data-parallax>
+            <img
+              src="/src/assets/images/hero-architecture.png"
+              alt="Brutalist concrete architecture"
+              class="w-full h-auto"
+              loading="lazy"
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 3: SELECTED WORKS
+         ======================================== -->
+    <section id="works" class="h-scroll-section bg-black py-24">
+      <!-- Section Header -->
+      <div class="section pb-0">
+        <p class="font-mono text-xs uppercase tracking-ultra mb-4" data-reveal>Portfolio</p>
+        <h2 class="heading-section" data-reveal data-reveal-delay="1">Selected Works</h2>
+      </div>
+
+      <!-- Horizontal Scroll Container -->
+      <div class="h-scroll-container overflow-hidden mt-16">
+        <div class="h-scroll-track pl-8 md:pl-16">
+          <!-- Card 1 -->
+          <div class="h-scroll-card rounded-sm">
+            <img
+              src="/src/assets/images/work-smooth.png"
+              alt="Concrete finishing work"
+              loading="lazy"
+            >
+            <div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+              <div>
+                <p class="font-mono text-xs uppercase tracking-ultra text-concrete">Residential</p>
+                <h3 class="font-display font-bold text-h3 mt-2">Foundation Pour</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="h-scroll-card rounded-sm">
+            <img
+              src="/src/assets/images/hero-architecture.png"
+              alt="Architectural concrete"
+              loading="lazy"
+            >
+            <div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+              <div>
+                <p class="font-mono text-xs uppercase tracking-ultra text-concrete">Commercial</p>
+                <h3 class="font-display font-bold text-h3 mt-2">Structural Design</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="h-scroll-card rounded-sm">
+            <img
+              src="/src/assets/images/work-collage.png"
+              alt="Concrete work collage"
+              loading="lazy"
+            >
+            <div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+              <div>
+                <p class="font-mono text-xs uppercase tracking-ultra text-concrete">Decorative</p>
+                <h3 class="font-display font-bold text-h3 mt-2">Custom Finishes</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="h-scroll-card rounded-sm">
+            <img
+              src="/src/assets/images/work-smooth.png"
+              alt="Precision concrete work"
+              loading="lazy"
+            >
+            <div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+              <div>
+                <p class="font-mono text-xs uppercase tracking-ultra text-concrete">Restoration</p>
+                <h3 class="font-display font-bold text-h3 mt-2">Legacy Repair</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spacer for scroll -->
+          <div class="w-16 md:w-32 flex-shrink-0"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 4: SERVICES
+         ======================================== -->
+    <section id="services" class="section bg-black">
+      <div class="max-w-6xl">
+        <p class="font-mono text-xs uppercase tracking-ultra mb-4" data-reveal>Services</p>
+        <h2 class="heading-section mb-16" data-reveal data-reveal-delay="1">What We Pour</h2>
+
+        <!-- Accordion -->
+        <div class="accordion" id="services-accordion">
+          <!-- Service 1: Residential -->
+          <div class="accordion-item" data-reveal data-reveal-delay="2" data-service="residential">
+            <div class="accordion-header">
+              <span class="accordion-number">01</span>
+              <h3 class="accordion-title">Residential</h3>
+              <span class="accordion-icon"></span>
+            </div>
+            <div class="accordion-content">
+              <p class="accordion-body">
+                Foundations. Driveways. Patios. The ground your life stands on. We bring precision craftsmanship to every residential project, creating surfaces that endure generations of use while enhancing your property's value.
+              </p>
+            </div>
+          </div>
+
+          <!-- Service 2: Commercial -->
+          <div class="accordion-item" data-reveal data-reveal-delay="3" data-service="commercial">
+            <div class="accordion-header">
+              <span class="accordion-number">02</span>
+              <h3 class="accordion-title">Commercial & Industrial</h3>
+              <span class="accordion-icon"></span>
+            </div>
+            <div class="accordion-content">
+              <p class="accordion-body">
+                Scale without sacrifice. Industrial strength, architectural finish. From warehouse floors to parking structures, we deliver commercial-grade concrete that meets the demands of high-traffic environments.
+              </p>
+            </div>
+          </div>
+
+          <!-- Service 3: Decorative -->
+          <div class="accordion-item" data-reveal data-reveal-delay="4" data-service="decorative">
+            <div class="accordion-header">
+              <span class="accordion-number">03</span>
+              <h3 class="accordion-title">Decorative & Stamped</h3>
+              <span class="accordion-icon"></span>
+            </div>
+            <div class="accordion-content">
+              <p class="accordion-body">
+                Stamped. Stained. Exposed aggregate. Concrete as canvas. Transform ordinary surfaces into statement pieces with our decorative finishing techniques, customized to complement your vision.
+              </p>
+            </div>
+          </div>
+
+          <!-- Service 4: Restoration -->
+          <div class="accordion-item" data-reveal data-reveal-delay="5" data-service="restoration">
+            <div class="accordion-header">
+              <span class="accordion-number">04</span>
+              <h3 class="accordion-title">Repair & Restoration</h3>
+              <span class="accordion-icon"></span>
+            </div>
+            <div class="accordion-content">
+              <p class="accordion-body">
+                What time breaks, we rebuild. Stronger than before. Our restoration services address cracks, spalling, and structural concerns, extending the life of your existing concrete investment.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Hover Images (Desktop) -->
+      <div class="service-image" id="service-image-residential">
+        <img src="/src/assets/images/work-smooth.png" alt="Residential concrete">
+      </div>
+      <div class="service-image" id="service-image-commercial">
+        <img src="/src/assets/images/hero-architecture.png" alt="Commercial concrete">
+      </div>
+      <div class="service-image" id="service-image-decorative">
+        <img src="/src/assets/images/work-collage.png" alt="Decorative concrete">
+      </div>
+      <div class="service-image" id="service-image-restoration">
+        <img src="/src/assets/images/work-smooth.png" alt="Concrete restoration">
+      </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 5: PROCESS
+         ======================================== -->
+    <section id="process" class="section bg-gray-dark/20">
+      <div class="max-w-6xl mx-auto">
+        <p class="font-mono text-xs uppercase tracking-ultra mb-4" data-reveal>Methodology</p>
+        <h2 class="heading-section mb-24" data-reveal data-reveal-delay="1">How We Work</h2>
+
+        <!-- Process Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">
+          <!-- Step 1: Consult -->
+          <div class="process-step" data-reveal data-reveal-delay="2">
+            <span class="process-number">01</span>
+            <h3 class="process-title">Consult</h3>
+            <p class="process-desc">
+              We listen. You dream. We plan. Every project begins with understanding your vision, assessing the site, and developing a strategy that aligns with your goals and budget.
+            </p>
+          </div>
+
+          <!-- Step 2: Cast -->
+          <div class="process-step" data-reveal data-reveal-delay="3">
+            <span class="process-number">02</span>
+            <h3 class="process-title">Cast</h3>
+            <p class="process-desc">
+              Precision in motion. Our crews execute with decades of combined experience, ensuring proper formwork, reinforcement, and finishing techniques that define lasting quality.
+            </p>
+          </div>
+
+          <!-- Step 3: Cure -->
+          <div class="process-step" data-reveal data-reveal-delay="4">
+            <span class="process-number">03</span>
+            <h3 class="process-title">Cure</h3>
+            <p class="process-desc">
+              Patience is the final ingredient. We don't rush the cure. Proper curing ensures maximum strength and durability—the difference between concrete that lasts decades and concrete that doesn't.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================
+         SECTION 6: FOOTER / CTA
+         ======================================== -->
+    <footer id="contact" class="section section-full bg-white text-black relative">
+      <div class="flex flex-col justify-center min-h-screen">
+        <!-- Main CTA -->
+        <div class="mb-auto mt-auto text-center md:text-left">
+          <p class="font-mono text-xs uppercase tracking-ultra text-gray-mid mb-4" data-reveal>Ready to Build?</p>
+          <h2 class="heading-hero text-black leading-tight" data-reveal data-reveal-delay="1">
+            <a href="mailto:hello@pourhaus.co" class="hover:text-gray-mid transition-colors duration-500" data-magnetic>
+              COMMISSION<br>A PROJECT
+            </a>
+          </h2>
+          <p class="text-body-large text-gray-mid mt-8 max-w-md" data-reveal data-reveal-delay="2">
+            Let's build something permanent.
+          </p>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="mt-auto pt-16 border-t border-gray-light/20">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Contact -->
+            <div>
+              <p class="font-mono text-xs uppercase tracking-ultra text-gray-mid mb-4">Contact</p>
+              <a href="tel:+1XXXXXXXXXX" class="text-mono-detail hover:text-gray-mid transition-colors block">(XXX) XXX-XXXX</a>
+              <a href="mailto:hello@pourhaus.co" class="text-mono-detail hover:text-gray-mid transition-colors block">hello@pourhaus.co</a>
+            </div>
+
+            <!-- Location -->
+            <div>
+              <p class="font-mono text-xs uppercase tracking-ultra text-gray-mid mb-4">Location</p>
+              <address class="text-mono-detail not-italic text-gray-mid">
+                2255 Cumberland Parkway SE<br>
+                Bldg 1600, Ste B-194<br>
+                Atlanta, GA 30339
+              </address>
+            </div>
+
+            <!-- Brand -->
+            <div class="md:text-right">
+              <img src="/src/assets/images/logo.png" alt="Pour Haus" class="h-8 mb-4 md:ml-auto">
+              <p class="text-mono-detail text-gray-mid">
+                Est. 2025<br>
+                Precision Concrete Mixing
+              </p>
+            </div>
+          </div>
+
+          <!-- Copyright -->
+          <div class="mt-12 pt-8 border-t border-gray-light/20 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-small text-gray-mid">
+              &copy; 2025 Pour Haus Concrete. All rights reserved.
+            </p>
+            <p class="text-small text-gray-mid">
+              Built with precision.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Main JS -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
