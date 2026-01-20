@@ -45,9 +45,11 @@ export function initHeroShader(lenis) {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    opacity: 0.4;
-    mix-blend-mode: overlay;
+    opacity: 0.15;
     z-index: 1;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   `;
 
   // Insert canvas as first child of hero
