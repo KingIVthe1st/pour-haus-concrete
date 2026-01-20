@@ -115,9 +115,11 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     width: 100%;
     height: 100%;
     pointer-events: none;
-    opacity: 0.4;
-    mix-blend-mode: overlay;
+    opacity: 0.15;
     z-index: 1;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   `,e.style.position="relative",e.insertBefore(i,e.firstChild);const s=i.getContext("webgl",{alpha:!0,antialias:!1,preserveDrawingBuffer:!1});if(!s)return i.remove(),null;const o=`
     attribute vec2 a_position;
     attribute vec2 a_texCoord;
