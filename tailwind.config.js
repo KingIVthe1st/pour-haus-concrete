@@ -12,11 +12,13 @@ export default {
           light: "#8A8A8A",
         },
         concrete: "#B8B5AD",
+        clay: "#964B00", // Atlanta red clay accent
+        aggregate: "#6B5B4F", // Exposed aggregate tone
       },
       fontFamily: {
-        display: ["Manrope", "sans-serif"],
-        mono: ["Space Mono", "monospace"],
-        body: ["Inter", "sans-serif"],
+        display: ["Clash Display", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+        body: ["Satoshi", "sans-serif"],
       },
       fontSize: {
         hero: "clamp(6rem, 15vw, 18rem)",
