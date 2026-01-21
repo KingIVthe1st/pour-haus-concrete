@@ -388,32 +388,42 @@ function initParallaxAnimations() {
 }
 
 /**
- * Scroll-velocity blur effect
- * Elements blur slightly during fast scroll
+ * Scroll-velocity motion effect
+ * Uses GPU-accelerated transforms instead of expensive filter: blur()
+ * Creates subtle skew effect during fast scroll for "motion" feel
  */
 function initVelocityBlur() {
-  const blurTargets = document.querySelectorAll(
+  const motionTargets = document.querySelectorAll(
     ".heading-hero, .heading-section, .h-scroll-card img",
   );
 
-  // Create blur proxy for smooth animation
-  const blurProxy = { blur: 0 };
+  // Pre-set will-change for GPU compositing
+  motionTargets.forEach((target) => {
+    target.style.willChange = "transform";
+    target.style.backfaceVisibility = "hidden";
+  });
 
-  // Update blur based on scroll velocity
+  // State for smooth interpolation
+  const motionProxy = { skew: 0 };
+
+  // Update motion effect based on scroll velocity
   gsap.ticker.add(() => {
-    const targetBlur = Math.min(Math.abs(scrollVelocity) * 0.5, 4);
+    // Calculate target skew (capped for subtlety)
+    const targetSkew = Math.max(-2, Math.min(scrollVelocity * 0.15, 2));
 
-    // Smooth interpolation
-    blurProxy.blur += (targetBlur - blurProxy.blur) * 0.1;
+    // Smooth interpolation toward target
+    motionProxy.skew += (targetSkew - motionProxy.skew) * 0.12;
 
-    // Apply blur only when moving fast enough
-    if (blurProxy.blur > 0.1) {
-      blurTargets.forEach((target) => {
-        target.style.filter = `blur(${blurProxy.blur}px)`;
+    // Only apply transforms when there's meaningful motion
+    if (Math.abs(motionProxy.skew) > 0.01) {
+      motionTargets.forEach((target) => {
+        // Use skewY for vertical scroll motion feel (GPU-accelerated)
+        target.style.transform = `skewY(${motionProxy.skew}deg)`;
       });
     } else {
-      blurTargets.forEach((target) => {
-        target.style.filter = "";
+      // Clear transforms when static
+      motionTargets.forEach((target) => {
+        target.style.transform = "";
       });
     }
   });

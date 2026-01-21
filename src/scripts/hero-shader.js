@@ -266,6 +266,7 @@ export function initHeroShader(lenis) {
   let scrollY = 0;
   let rafId = null;
   let isVisible = true;
+  let isInViewport = true; // Track if hero is in viewport
   let startTime = Date.now();
 
   // Resize handler
@@ -296,7 +297,8 @@ export function initHeroShader(lenis) {
 
   // Render loop
   function render() {
-    if (!isVisible) {
+    // Skip rendering if document hidden OR hero off-screen
+    if (!isVisible || !isInViewport) {
       rafId = requestAnimationFrame(render);
       return;
     }
@@ -314,10 +316,21 @@ export function initHeroShader(lenis) {
     rafId = requestAnimationFrame(render);
   }
 
-  // Visibility handling
+  // Visibility handling - pause when tab is hidden
   document.addEventListener("visibilitychange", () => {
     isVisible = !document.hidden;
   });
+
+  // IntersectionObserver - pause WebGL when hero is off-screen (huge perf win)
+  const heroObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        isInViewport = entry.isIntersecting;
+      });
+    },
+    { threshold: 0 }, // Trigger as soon as any part is visible/hidden
+  );
+  heroObserver.observe(hero);
 
   // Initialize
   resize();
@@ -328,6 +341,7 @@ export function initHeroShader(lenis) {
   // Return cleanup function
   return function cleanup() {
     if (rafId) cancelAnimationFrame(rafId);
+    heroObserver.disconnect(); // Stop observing hero
     window.removeEventListener("resize", resize);
     hero.removeEventListener("mousemove", handleMouseMove);
     canvas.remove();
