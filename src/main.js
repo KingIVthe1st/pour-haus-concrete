@@ -12,6 +12,7 @@ import { initHorizontalScroll } from "./scripts/horizontal-scroll.js";
 import { initMagnetic } from "./scripts/magnetic.js";
 import { initMobileMenu } from "./scripts/mobile-menu.js";
 import { initHeroShader } from "./scripts/hero-shader.js";
+import { initSmartHeader } from "./scripts/smart-header.js";
 
 // Wait for DOM
 document.addEventListener("DOMContentLoaded", () => {
@@ -168,6 +169,9 @@ function initAllModules() {
 
   // Premium visual effects
   initHeroShader(lenis);
+
+  // Smart header - hide on scroll down, show on scroll up
+  initSmartHeader(lenis);
 
   // Trigger initial reveals for above-fold content
   setTimeout(() => {
