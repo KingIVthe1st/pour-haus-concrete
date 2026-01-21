@@ -313,50 +313,77 @@ function initHeroOrchestration() {
 
 /**
  * Scroll-triggered reveal animations with temporal variety
+ * Uses gsap.matchMedia for responsive animation values
  */
 function initRevealAnimations() {
   const reveals = document.querySelectorAll("[data-reveal]");
 
-  reveals.forEach((el, index) => {
-    // Skip hero elements (handled separately)
-    if (el.closest("#hero")) return;
+  // Use matchMedia for responsive animation values
+  // Mobile: smaller Y offset (30px) to prevent overlap
+  // Desktop: larger Y offset (60-80px) for dramatic effect
+  const mm = gsap.matchMedia();
 
-    // Vary animation properties for temporal diversity
-    const delay = parseFloat(el.dataset.revealDelay) || 0;
-    const isHeading =
-      el.tagName.match(/^H[1-6]$/) || el.classList.contains("heading-section");
+  mm.add(
+    {
+      isMobile: "(max-width: 768px)",
+      isDesktop: "(min-width: 769px)",
+    },
+    (context) => {
+      const { isMobile } = context.conditions;
 
-    // Set initial state with blur for premium feel
-    gsap.set(el, {
-      y: isHeading ? 80 : 60,
-      opacity: 0,
-      filter: "blur(8px)",
-    });
+      reveals.forEach((el, index) => {
+        // Skip hero elements (handled separately)
+        if (el.closest("#hero")) return;
 
-    ScrollTrigger.create({
-      trigger: el,
-      start: "top 88%",
-      onEnter: () => {
-        gsap.to(el, {
-          y: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-          duration: isHeading ? 1.2 : 0.9,
-          delay: delay * 0.15,
-          ease: "expo.out",
-        });
-      },
-      onLeaveBack: () => {
-        gsap.to(el, {
-          y: isHeading ? 80 : 60,
+        // Vary animation properties for temporal diversity
+        const delay = parseFloat(el.dataset.revealDelay) || 0;
+        const isHeading =
+          el.tagName.match(/^H[1-6]$/) ||
+          el.classList.contains("heading-section");
+
+        // Responsive Y offset: Mobile uses smaller values to prevent overlap
+        const yOffset = isMobile ? 30 : isHeading ? 80 : 60;
+        // Reduce blur on mobile for better performance and cleaner edges
+        const blurAmount = isMobile ? "blur(4px)" : "blur(8px)";
+
+        // Set initial state with responsive values
+        gsap.set(el, {
+          y: yOffset,
           opacity: 0,
-          filter: "blur(8px)",
-          duration: 0.4,
-          ease: "power2.in",
+          filter: blurAmount,
         });
-      },
-    });
-  });
+
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 88%",
+          onEnter: () => {
+            gsap.to(el, {
+              y: 0,
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: isHeading ? 1.2 : 0.9,
+              delay: delay * 0.15,
+              ease: "expo.out",
+            });
+          },
+          onLeaveBack: () => {
+            gsap.to(el, {
+              y: yOffset,
+              opacity: 0,
+              filter: blurAmount,
+              duration: 0.4,
+              ease: "power2.in",
+            });
+          },
+        });
+      });
+
+      // Return cleanup function for matchMedia
+      return () => {
+        // ScrollTrigger instances are automatically cleaned up by matchMedia
+      };
+    },
+  );
 }
 
 /**
