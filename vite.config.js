@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/pour-haus-concrete/",
+  base: "/", // Custom domain serves from root
   root: ".",
   publicDir: "public",
   build: {
